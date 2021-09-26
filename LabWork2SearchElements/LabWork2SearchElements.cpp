@@ -54,7 +54,7 @@ void FillRand(int* arr, int n, double min, double max) {
 void Writer(int* A, int length) {
     for (int i = 0; i < length; i++) {
 
-        printf("%3.3f\n", A[i]);
+        //printf("%3.3d\n", A[i]);
 
         cout << "arr[" << i << "] = \t" << A[i] << endl;
         //File << "arr[" << i << "] = \t" << A[i] << endl;
