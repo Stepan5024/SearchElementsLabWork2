@@ -7,7 +7,29 @@ using namespace std;
 
 int main()
 {
-    cout << "Hello World!\n";
-    cout << "commit and push on branch Algoritm";
+    setlocale(LC_ALL, "Russian");
+    srand(time(NULL));
+    int n = 0;
+    cout << "Введите размер последовательности: ";
+    cin >> n;
+    int* arr = new int[n];
+    FillRand(arr, n, 1, 30);
+    
+    
+}
+void FillRand(int* arr, int n, double min, double max) {
+    for (int i = 0; i < n; i++) {
 
+        arr[i] = 10 + ((double)rand() / RAND_MAX) * (max - min);
+    }
+    //File << "Рандомная последовательность дробных чисел" << endl;
+    Writer(arr, n);
+}
+void Writer(int* A, int length) {
+    for (int i = 0; i < length; i++) {
+
+        printf("%3.3f\n", A[i]);
+        cout << "arr[" << i << "] = \t" << A[i] << endl;
+        //File << "arr[" << i << "] = \t" << A[i] << endl;
+    }
 }
