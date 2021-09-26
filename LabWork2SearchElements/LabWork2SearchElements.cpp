@@ -26,7 +26,7 @@ int main()
     }
     Writer(&arr[0], n);
     int k; cout << "Введите ключ поиска: "; cin >> k;
-    /*FillGrow(arr, n, 1, 30);
+    FillGrow(arr, n, 1, 30);
     int i = 0;
     int k = arr[5]; //ключ поиска
     while (k > arr[i]) {
@@ -34,7 +34,8 @@ int main()
     }
     if (k == arr[i]) cout << "Индекс i = " << i << endl;
     else cout << "Элемент не найден";
-    */
+
+    
     int result1 = linearSearch(&arr[0], k, n);
     if (result1 > 0) {
         cout << "Индекс равен: " << result1 << endl;
@@ -49,6 +50,9 @@ int main()
     else {
         cout << "Элемент не найден" << endl;
     }
+    
+    cout << "Armen";
+
 }
 void FillGrow(int* arr, int length, int min, int max) {
     int step = 1 + (max - min) / length;
