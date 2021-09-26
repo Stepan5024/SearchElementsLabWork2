@@ -28,7 +28,7 @@ int main()
     if (k == arr[i]) cout << "Индекс i = " << i << endl;
     else cout << "Элемент не найден";
     
-    
+    cout << "Armen";
 }
 void FillGrow(int* arr, int length, int min, int max) {
     int step = 1 + (max - min) / length;
