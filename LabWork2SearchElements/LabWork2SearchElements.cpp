@@ -13,6 +13,9 @@ void FillGrow(int* arr, int length, int min, int max);
 void Writer(int* A, int length);
 int linearSearch(int *A, int x, int n);
 int bLinearSearch(int* A, int x, int n);
+int TSearch(int* A, int x, int n);
+int BSearch(int* A, int x, int n);
+
 
 int main()
 {
@@ -26,33 +29,48 @@ int main()
     }
     Writer(&arr[0], n);
     int k; cout << "Введите ключ поиска: "; cin >> k;
-    FillGrow(arr, n, 1, 30);
-    int i = 0;
-    int k = arr[5]; //ключ поиска
-    while (k > arr[i]) {
-        i++;
-    }
-    if (k == arr[i]) cout << "Индекс i = " << i << endl;
-    else cout << "Элемент не найден";
+    
 
     
     int result1 = linearSearch(&arr[0], k, n);
     if (result1 > 0) {
-        cout << "Индекс равен: " << result1 << endl;
+        cout << "Процедура S индекс равен: " << result1 << endl;
     }
     else {
-        cout << "Элемент не найден" << endl;
+        cout << "Процедура S лемент не найден" << endl;
     }
     int result2 = bLinearSearch(&arr[0], k, n);
     if (result2 > 0) {
-        cout << "Индекс равен: " << result1 << endl;
+        cout << "Процедура Q индекс равен: " << result1 << endl;
     }
     else {
-        cout << "Элемент не найден" << endl;
+        cout << "Процедура Q элемент не найден" << endl;
     }
     
-    cout << "Armen";
+    
 
+    // Процедура T
+    int* arrGrow = new int[n+1];
+    cout << "Возрастающая последовательность" << endl;
+    FillGrow(arrGrow, n, 1, 30);
+    cout << "Введите ключ поиска: "; cin >> k;
+    
+    result2 = TSearch(&arrGrow[0], k, n);
+    if (result2 > 0) {
+        cout << "Процедура T индекс равен: " << result1 << endl;
+    }
+    else {
+        cout << "Процедура T элемент не найден" << endl;
+    }
+
+    //Процедура B
+    result2 = BSearch(&arrGrow[0], k, n);
+    if (result2 > 0) {
+        cout << "Процедура B индекс равен: " << result1 << endl;
+    }
+    else {
+        cout << "Процедура B элемент не найден" << endl;
+    }
 }
 void FillGrow(int* arr, int length, int min, int max) {
     int step = 1 + (max - min) / length;
@@ -62,10 +80,44 @@ void FillGrow(int* arr, int length, int min, int max) {
         arr[i] = min + step * i;
 
     }
+    arr[length + 1] = INT_MAX;
     //File << "Возрастающая последовательность целых чисел" << endl;
     Writer(arr, length);
 }
+int TSearch(int* A, int x, int n) {
+    int i = 0;
 
+    while (x > A[i]) {
+        i++;
+    }
+    if (x == A[i]) return i;
+    else return NotFound;
+}
+int BSearch(int* A, int k, int n) {
+    int low = 0;
+    int high = n - 1;
+    int mid = (low + high) / 2;
+    if (A[mid] == k) {
+        return mid;
+    } 
+    while (A[mid] <= k) {
+        if (A[mid] == k) {
+            return mid;
+        }
+        low = mid;
+        mid = (low + high) / 2;
+        
+    }
+    while (A[mid] >= k) {
+        if (A[mid] == k) {
+            return mid;
+        }
+        high = mid;
+        mid = (low + high) / 2;
+        
+    }
+    return NotFound;
+}
 int linearSearch(int* A, int x, int n) {
     int Last = A[n];
     A[n] = x;
