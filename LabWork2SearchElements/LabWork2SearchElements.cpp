@@ -8,13 +8,13 @@
 #define NotFound -1;
 using namespace std;
 
-void FillRand(int* arr, int n, double min, double max);
-void FillGrow(int* arr, int length, int min, int max);
-void Writer(int* A, int length);
-int linearSearch(int *A, int x, int n);
-int bLinearSearch(int* A, int x, int n);
-int TSearch(int* A, int x, int n);
-int BSearch(int* A, int x, int n);
+void FillRand(int* arr, int n, double min, double max); // Функция, формирующая рандомную последовательность
+void FillGrow(int* arr, int length, int min, int max); // Функция, формирующая возрастающую последовательность
+void Writer(int* A, int length); // Функция, печатающая последовательность
+int QSearch(int *A, int x, int n); // Функция быстрого последовательного поиска в лекциях Sentinel_Linear_Search 
+int SSearch(int* A, int x, int n); // Функция последовательного поиска в лекциях Better_Linear_Search
+int TSearch(int* A, int x, int n); // Функция последовательного поиска в упорядоченном массиве
+int BSearch(int* A, int x, int n); // Функция бинарного поиска
 
 
 int main()
@@ -32,41 +32,40 @@ int main()
     
 
     
-    int result1 = linearSearch(&arr[0], k, n);
-    if (result1 > 0) {
-        cout << "Процедура S индекс равен: " << result1 << endl;
-    }
-    else {
-        cout << "Процедура S лемент не найден" << endl;
-    }
-    int result2 = bLinearSearch(&arr[0], k, n);
-    if (result2 > 0) {
-        cout << "Процедура Q индекс равен: " << result1 << endl;
+    int result = QSearch(&arr[0], k, n);
+    if (result > 0) {
+        cout << "Процедура Q индекс равен: " << result << endl;
     }
     else {
         cout << "Процедура Q элемент не найден" << endl;
     }
-    
-    
+    result = SSearch(&arr[0], k, n);
+    if (result > 0) {
+        cout << "Процедура S индекс равен: " << result << endl;
+    }
+    else {
+        cout << "Процедура S элемент не найден" << endl;
+    }
 
     // Процедура T
     int* arrGrow = new int[n+1];
     cout << "Возрастающая последовательность" << endl;
-    FillGrow(arrGrow, n, 1, 30);
+    FillGrow(arrGrow, n-1, 1, 30);
+    arrGrow[n] = INT_MAX;
     cout << "Введите ключ поиска: "; cin >> k;
     
-    result2 = TSearch(&arrGrow[0], k, n);
-    if (result2 > 0) {
-        cout << "Процедура T индекс равен: " << result1 << endl;
+    result = TSearch(&arrGrow[0], k, n);
+    if (result > 0) {
+        cout << "Процедура T индекс равен: " << result << endl;
     }
     else {
         cout << "Процедура T элемент не найден" << endl;
     }
 
     //Процедура B
-    result2 = BSearch(&arrGrow[0], k, n);
-    if (result2 > 0) {
-        cout << "Процедура B индекс равен: " << result1 << endl;
+    result = BSearch(&arrGrow[0], k, n);
+    if (result > 0) {
+        cout << "Процедура B индекс равен: " << result << endl;
     }
     else {
         cout << "Процедура B элемент не найден" << endl;
@@ -76,32 +75,37 @@ void FillGrow(int* arr, int length, int min, int max) {
     int step = 1 + (max - min) / length;
 
     for (int i = 0; i < length; i++) {
-
         arr[i] = min + step * i;
-
     }
     arr[length + 1] = INT_MAX;
-    //File << "Возрастающая последовательность целых чисел" << endl;
     Writer(arr, length);
 }
 int TSearch(int* A, int x, int n) {
+    int count = 0;
     int i = 0;
 
     while (x > A[i]) {
         i++;
+        count++;
     }
+    cout << "Количество операций сравнения для TSearch " << count << endl;
     if (x == A[i]) return i;
     else return NotFound;
 }
 int BSearch(int* A, int k, int n) {
+    int count = 0;
     int low = 0;
     int high = n - 1;
     int mid = (low + high) / 2;
     if (A[mid] == k) {
+        cout << "Количество операций сравнения для BSearch " << count << endl;
         return mid;
     } 
     while (A[mid] <= k) {
+        count++;
+
         if (A[mid] == k) {
+            cout << "Количество операций сравнения для BSearch " << count << endl;
             return mid;
         }
         low = mid;
@@ -109,7 +113,9 @@ int BSearch(int* A, int k, int n) {
         
     }
     while (A[mid] >= k) {
+        count++;
         if (A[mid] == k) {
+            cout << "Количество операций сравнения для BSearch " << count << endl;
             return mid;
         }
         high = mid;
@@ -118,49 +124,54 @@ int BSearch(int* A, int k, int n) {
     }
     return NotFound;
 }
-int linearSearch(int* A, int x, int n) {
+int QSearch(int* A, int x, int n) {
+    int numberOfEntry = 0;
+    int index = -1;
+    int count = 0;
     int Last = A[n];
     A[n] = x;
 
     int i = 0;
-    for (i; A[i] != x; i++);
+    for (i; A[i] != x; i++) {
+        count++;
+    }
     A[n] = Last;
     if (i < n || A[n] == x) {
-        return i;
+        cout << "Количество операций сравнения для QSearch " << count << endl;
+        numberOfEntry++;
+        index = i;
+        //return i;
     }
-    else {
-        return NotFound;
-    }
+    
+    if (numberOfEntry) cout << "Количество вхождения ключа" << numberOfEntry << endl;
+    return index;
+
 }
-int bLinearSearch(int* A, int x, int n) {
+int SSearch(int* A, int x, int n) {
+    int count = 0;
     for (int i = 0; i < n; i++) {
+        count++;
         if (A[i] == x) {
+            cout << "Количество операций сравнения для SSearch " << count << endl;
             return i;
         }
         if (A[i] == A[n - 1]) {
+            cout << "Количество операций сравнения для SSearch " << count << endl;
             return NotFound;
         }
     }
 }
 
-
-
-
 void FillRand(int* arr, int n, double min, double max) {
     for (int i = 0; i < n; i++) {
-
         arr[i] = 10 + ((double)rand() / RAND_MAX) * (max - min);
     }
-    //File << "Рандомная последовательность дробных чисел" << endl;
+    
     Writer(arr, n);
 }
 void Writer(int* A, int length) {
     for (int i = 0; i < length; i++) {
-
-        //printf("%3.3d\n", A[i]);
-
         cout << "arr[" << i << "] = " << A[i] << endl;
-        //File << "arr[" << i << "] = \t" << A[i] << endl;
     }
 }
 
