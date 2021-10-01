@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
+#include<chrono> // подключение библиотеки для вычисления времени работы алгоритмов 
 
 #define NotFound -1;
 using namespace std;
@@ -30,19 +31,37 @@ int main()
     srand(time(NULL));
     int n = 0;
     cout << "Введите размер последовательности: "; cin >> n;
-    int* arr = new int[n];
-    FillRand(arr, n, 0, 50);
-    
+    /*int* arr = new int[n];
+    FillRand(arr, n, 0, 50);*/
+    int* arrGrow = new int[n + 1];
+    cout << "Возрастающая последовательность" << endl;
+    FillGrow(arrGrow, n - 1, 1, 30);
+    arrGrow[n] = INT_MAX;
+
     int k; cout << "Введите ключ поиска: "; cin >> k;
 
-    int result = QSearch(&arr[0], k, n);
+
+    auto begin = std::chrono::steady_clock::now();
+    // получаем время перед началом формирования последовательности
+    
+    int result = QSearch(&arrGrow[0], k, n);
     if (result >= 0) {
         cout << "Процедура Q индекс равен: " << result << endl;
     }
     else {
         cout << "Процедура Q элемент не найден" << endl;
     }
-    result = SSearch(&arr[0], k, n);
+
+    auto end = std::chrono::steady_clock::now();
+    // получаем время по окончанию формирования последовательности
+    auto elapsed_ms = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+    // получаем время работы в микросекундах
+    std::cout << "Время работы алгоритма по формированию последовательности: " << elapsed_ms.count() << " (мкС)" << std::endl;
+    // вывод времени работы 
+
+
+
+    result = SSearch(&arrGrow[0], k, n);
     if (result >= 0) {
         cout << "Процедура S индекс равен: " << result << endl;
     }
@@ -51,10 +70,6 @@ int main()
     }
 
     // Процедура T
-    int* arrGrow = new int[n+1];
-    cout << "Возрастающая последовательность" << endl;
-    FillGrow(arrGrow, n-1, 1, 30);
-    arrGrow[n] = INT_MAX;
     cout << "Введите ключ поиска: "; cin >> k;
     
     result = TSearch(&arrGrow[0], k, n);
