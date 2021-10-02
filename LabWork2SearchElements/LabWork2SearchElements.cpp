@@ -38,27 +38,37 @@ int main()
     FillGrow(arrGrow, n - 1, 1, 30);
     arrGrow[n] = INT_MAX;
 
-    int k; cout << "Введите ключ поиска: "; cin >> k;
+    int k;
 
-
-    auto begin = std::chrono::steady_clock::now();
-    // получаем время перед началом формирования последовательности
+    int (*LineralOperations[4])(int*, int, int) = { QSearch, SSearch, TSearch, BSearch }; // Указатель на массив функций
     
-    int result = QSearch(&arrGrow[0], k, n);
+    int lengthLin = sizeof(LineralOperations) / sizeof(LineralOperations[0]);// получаем длину массива
+    for (int i = 0; i < lengthLin; i++)
+    {
+        for (int j = 0; j < 3; j++) {
+            if (j == 0) k = arrGrow[0]; // ключ поиска
+            else if (j == 1) k = arrGrow[n / 2]; // ключ поиска
+            else if (j == 2) k = arrGrow[n]; // ключ поиска
+            auto begin = chrono::steady_clock::now(); // получаем время перед началом формирования последовательности
+
+            int temp = LineralOperations[i](&arrGrow[0], k, n);    // вызов функции по указателю
+            
+            auto end = chrono::steady_clock::now();// получаем время по окончанию формирования последовательности
+
+            auto elapsed_ms = chrono::duration_cast<chrono::microseconds>(end - begin);// получаем время работы в микросекундах
+
+            cout << elapsed_ms.count() << endl;
+        }
+    }
+
+   
+    /*int result = QSearch(&arrGrow[0], k, n);
     if (result >= 0) {
         cout << "Процедура Q индекс равен: " << result << endl;
     }
     else {
         cout << "Процедура Q элемент не найден" << endl;
     }
-
-    auto end = std::chrono::steady_clock::now();
-    // получаем время по окончанию формирования последовательности
-    auto elapsed_ms = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
-    // получаем время работы в микросекундах
-    std::cout << "Время работы алгоритма по формированию последовательности: " << elapsed_ms.count() << " (мкС)" << std::endl;
-    // вывод времени работы 
-
 
 
     result = SSearch(&arrGrow[0], k, n);
@@ -88,25 +98,54 @@ int main()
     else {
         cout << "Процедура B элемент не найден" << endl;
     }
-
+    */
 
     cout << "Введите размер символьной последовательности: "; cin >> n;
-    char* arrChar = new char[n];
+    /*char* arrChar = new char[n];
     for (int i = 0; i < n; i++) {
         cout << "Введите элемент символ: "; cin >> arrChar[i];
         
     }
-    Writer(&arrChar[0], n);
-    char key; cout << "Введите ключ поиска: "; cin >> key;
+    Writer(&arrChar[0], n);*/
 
-    result = QSearch(&arrChar[0], key, n);
+    char* arrGrowChar = new char[n];
+    cout << "Возрастающая последовательность символов" << endl;
+    FillGrow(arrGrowChar, n - 1, 1, 30);
+    arrGrowChar[n] = INT_MAX;
+
+    char key; //cout << "Введите ключ поиска: "; cin >> key;
+
+    int (*CharSearch[4])(char*, char, int) = { QSearch, SSearch, TSearch, BSearch }; // Указатель на массив функций
+
+    int lengthLinChar = sizeof(CharSearch) / sizeof(CharSearch[0]);// получаем длину массива
+    for (int i = 0; i < lengthLinChar; i++)
+    {
+        for (int j = 0; j < 3; j++) {
+            if (j == 0) key = arrGrowChar[0]; // ключ поиска
+            else if (j == 1) key = arrGrowChar[n / 2]; // ключ поиска
+            else if (j == 2) key = arrGrowChar[n - 1]; // ключ поиска
+            auto begin = chrono::steady_clock::now(); // получаем время перед началом формирования последовательности
+
+            CharSearch[i](arrGrowChar, k, n);    // вызов функции по указателю
+
+            auto end = chrono::steady_clock::now();// получаем время по окончанию формирования последовательности
+
+            auto elapsed_ms = chrono::duration_cast<chrono::microseconds>(end - begin);// получаем время работы в микросекундах
+
+            cout << elapsed_ms.count() << endl;
+        }
+    }
+
+
+    /*
+    int result = QSearch(&arrGrowChar[0], key, n);
     if (result >= 0) {
         cout << "Процедура Q индекс равен: " << result << endl;
     }
     else {
         cout << "Процедура Q элемент не найден" << endl;
     }
-    result = SSearch(&arrChar[0], key, n);
+    result = SSearch(&arrGrowChar[0], key, n);
     if (result >= 0) {
         cout << "Процедура S индекс равен: " << result << endl;
     }
@@ -115,10 +154,8 @@ int main()
     }
     
     // Процедура T
-    char* arrGrowChar = new char[n + 1];
-    cout << "Возрастающая последовательность символов" << endl;
-    FillGrow(arrGrowChar, n - 1, 1, 30);
-    arrGrowChar[n] = INT_MAX;
+    
+    
     cout << "Введите ключ поиска: "; cin >> key;
 
     result = TSearch(&arrGrowChar[0], key, n);
@@ -137,7 +174,7 @@ int main()
     else {
         cout << "Процедура B элемент не найден" << endl;
     }
-    
+    */
 }
 void FillGrow(char* arr, int length, int min, int max) {
     int step = 1 + (max - min) / length;
@@ -170,9 +207,9 @@ int TSearch(int* A, int x, int n) {
     else return NotFound;
 }
 int BSearch(int* A, int k, int n) {
-    int count = 0;
+    /*int count = 0;
     int low = 0;
-    int high = n - 1;
+    int high = n;
     int mid = (low + high) / 2;
     if (A[mid] == k) {
         cout << "Количество операций сравнения для BSearch " << count << endl;
@@ -199,7 +236,27 @@ int BSearch(int* A, int k, int n) {
         mid = (low + high) / 2;
         
     }
+    return NotFound;*/
+    bool flag = false;
+    int l = 0; // левая граница
+    int r = 9; // правая граница
+    int mid;
+
+    while ((l <= r) && (flag != true)) {
+        mid = (l + r) / 2; // считываем срединный индекс отрезка [l,r]
+
+        if (A[mid] == k) flag = true; //проверяем ключ со серединным элементом
+        if (A[mid] > k) r = mid - 1; // проверяем, какую часть нужно отбросить
+        else l = mid + 1;
+    }
+
+    if (flag) {
+        cout << "Индекс элемента " << k << " в массиве равен: " << mid;
+        return mid;
+    }
+    else cout << "Извините, но такого элемента в массиве нет";
     return NotFound;
+
 }
 int QSearch(int* A, int x, int n) {
     int count = 0;
